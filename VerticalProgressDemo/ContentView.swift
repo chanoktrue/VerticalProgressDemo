@@ -14,11 +14,15 @@ struct ContentView: View {
     var body: some View {
         ScrollView {
             VStack {
-                ForEach(datas, id: \.self) {_ in
-//                    CustomLineShape(start: 10)
-//                        .stroke(style: StrokeStyle(lineWidth: 3))
-//                        .foregroundColor(.black)
-                    FitnessCellView()
+                ForEach(datas.indices, id: \.self) {index in
+                    CustomRowView(
+                        image:  Image(systemName: "smallcircle.filled.circle"),
+                        start: 60,
+                        rightPadding: 50,
+                        color: .gray.opacity(0.5)) {
+                            FitnessCellView()
+                    }
+                    
                 }
             }
         }
@@ -32,13 +36,41 @@ struct ContentView: View {
 
 
 struct CustomRowView<Content: View>: View {
-    let image: String
+    let image: Image
     let start: CGFloat
     let rightPadding: CGFloat
     let color: Color
     let content: Content
-    let content: Content
+    let position: CustomLineShape.Position
     
+    init(image: Image, start: CGFloat, rightPadding: CGFloat, color: Color,
+         position: CustomLineShape.Position = .start, @ViewBuilder _ content: @escaping() -> Content) {
+        self.image = image
+        self.start = start
+        self.rightPadding = rightPadding
+        self.color = color
+        self.content = content()
+        self.position = position
+    }
+    
+    var body: some View {
+        HStack {
+            ZStack {
+                CustomLineShape(start: start)
+                    .stroke(style: StrokeStyle(lineWidth: 3))
+                    .foregroundColor(color)
+                image
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 40, height: 40)
+                    .padding(.leading, 10)
+                    .foregroundColor(.green)
+            }
+        .frame(width: start + rightPadding)
+        content
+        Spacer()
+        }
+    }
 }
 
 
@@ -52,5 +84,10 @@ struct CustomLineShape: Shape {
         path.addLine(to: CGPoint(x: start, y: 1.5 * rect.maxY))
         
         return path
+    }
+    
+    enum Position {
+        case start
+        case end
     }
 }
