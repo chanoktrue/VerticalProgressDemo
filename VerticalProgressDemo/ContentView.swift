@@ -14,13 +14,15 @@ struct ContentView: View {
     var body: some View {
         ScrollView {
             VStack {
-                ForEach(datas.indices, id: \.self) {index in
+                ForEach(datas.indices, id: \.self) { index in
                     CustomRowView(
                         image:  Image(systemName: "smallcircle.filled.circle"),
-                        start: 60,
-                        rightPadding: 50,
-                        color: .gray.opacity(0.5)) {
-                            FitnessCellView()
+                        start: 40,
+                        rightPadding: 30,
+                        color: .gray.opacity(0.5),
+                        position: .start //(index < datas.count ) ? .start : .end
+                    ) {
+                        FitnessCellView(exercise: datas[index])
                     }
                     
                 }
@@ -57,12 +59,12 @@ struct CustomRowView<Content: View>: View {
         HStack {
             ZStack {
                 CustomLineShape(start: start)
-                    .stroke(style: StrokeStyle(lineWidth: 3))
+                    .stroke(style: StrokeStyle(lineWidth: position == .start ? 3 : 0))
                     .foregroundColor(color)
                 image
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 40, height: 40)
+                    .frame(width: 30, height: 30)
                     .padding(.leading, 10)
                     .foregroundColor(.green)
             }

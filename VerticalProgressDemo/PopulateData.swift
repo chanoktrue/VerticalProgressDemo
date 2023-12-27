@@ -29,7 +29,7 @@ enum ActivityType: String {
         case .running:
             return "figure.run"
         default:
-            return String(self.rawValue)
+            return "figure.mixed.cardio"
         }
         
     }
